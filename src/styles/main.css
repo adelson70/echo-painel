@@ -1,0 +1,43 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--el-bg-color-page);
+  color: var(--el-text-color-primary);
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+/* layout base */
+.layout {
+  display: flex;
+  height: 100%;
+}
+
+/* sidebar */
+.sidebar {
+  width: 240px;
+  background: var(--el-bg-color);
+  border-right: 1px solid var(--el-border-color);
+}
+
+/* header */
+.header {
+  height: 56px;
+  background: var(--el-bg-color-overlay);
+  border-bottom: 1px solid var(--el-border-color);
+}
+
+/* conteúdo */
+.content {
+  flex: 1;
+  padding: 16px;
+  background: var(--el-bg-color-page);
+}

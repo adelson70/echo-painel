@@ -1,0 +1,7 @@
+:root {
+    --el-color-primary: #3a7afe
+}
+
+.dark {
+    --el-color-primary: #5b8cff
+}

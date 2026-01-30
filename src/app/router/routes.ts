@@ -5,6 +5,7 @@ const authRoutes = [
     {
         path: '/login',
         component: AuthLayout,
+        meta: { guestOnly: true },
         children: [
             {
                 path: '',
@@ -19,6 +20,7 @@ const dashboardRoutes = [
     {
         path: '/',
         component: MainLayout,
+        meta: { requiresAuth: true },
         children: [
             {
                 path: '',
@@ -33,6 +35,7 @@ const regrasRoutes = [
     {
         path: '/regras',
         component: MainLayout,
+        meta: { requiresAuth: true },
         children: [
             {
                 path: 'entrada',
@@ -57,6 +60,7 @@ const relatoriosRoutes = [
     {
         path: '/relatorios',
         component: MainLayout,
+        meta: { requiresAuth: true },
         children: [
             {
                 path: '',
@@ -71,6 +75,7 @@ const sistemaRoutes = [
     {
         path: '/sistema',
         component: MainLayout,
+        meta: { requiresAuth: true },
         children: [
             {
                 path: 'usuarios',
@@ -95,6 +100,7 @@ const telefoniaRoutes = [
         {
         path: '/telefonia',
         component: MainLayout,
+        meta: { requiresAuth: true },
         children: [
             {
                 path: 'filas',
