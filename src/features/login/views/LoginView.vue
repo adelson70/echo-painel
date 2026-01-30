@@ -5,28 +5,15 @@
       <p class="subtitle">Acesso ao painel</p>
       <el-form @submit.prevent="handleLogin" :model="form" label-position="top">
         <el-form-item label="E-mail">
-          <el-input 
-            v-model="form.email" 
-            placeholder="Digite seu e-mail" 
-            type="email"
-            />
+          <el-input v-model="form.email" placeholder="Digite seu e-mail" type="email" />
         </el-form-item>
 
         <el-form-item label="Senha">
-          <el-input
-            v-model="form.password"
-            type="password"
-            show-password
-            placeholder="Digite sua senha"
-          />
+          <el-input v-model="form.password" type="password" show-password
+            placeholder="Digite sua senha" />
         </el-form-item>
 
-        <el-button
-          type="primary"
-          class="login-button"
-          :loading="loading"
-          @click="handleLogin"
-        >
+        <el-button type="primary" class="login-button" :loading="loading" @click="handleLogin">
           Entrar
         </el-button>
       </el-form>
@@ -38,6 +25,8 @@
 import { reactive, ref } from 'vue'
 import { useAuthStore } from '@/app/stores/auth.store'
 import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import z from 'zod'
 
 const loading = ref(false)
 
@@ -49,8 +38,20 @@ const form = reactive({
 const authStore = useAuthStore()
 const router = useRouter()
 
+const loginSchema = z.object({
+  email: z.string().min(1, 'Email é obrigatório').email('Email inválido'),
+  password: z.string().min(1, 'Senha é obrigatória'),
+})
+
 const handleLogin = async () => {
   loading.value = true
+
+  const result = loginSchema.safeParse(form)
+  if (!result.success) {
+    ElMessage.error(result.error.errors[0]?.message || 'Dados inválidos')
+    loading.value = false
+    return
+  }
 
   try {
     await authStore.login(form)
