@@ -57,19 +57,21 @@ import { sidebarItems } from "@/constants/sidebar"
 import { useRouter } from "vue-router"
 import { LogOut } from "lucide-vue-next"
 import { useThemeStore } from "@/app/stores/theme.store"
+import { useAuthStore } from "../stores/auth.store"
 
 const activeMenu = ref("/dashboard")
 const router = useRouter()
 const themeStore = useThemeStore()
+const authStore = useAuthStore()
 
 function handleSelect(index: string) {
   activeMenu.value = index
   router.push(index)
 }
 
-function logout() {
-  // Lógica de logout aqui
-  console.log("Logout clicked")
+async function logout() {
+  await authStore.logout()
+  router.push({ name: "Login" })
 }
 
 </script>

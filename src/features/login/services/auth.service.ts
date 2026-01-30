@@ -30,3 +30,7 @@ export const me = async () => {
     const response = await api.get<Usuario>("/auth/me");
     return { usuario: response.data };
 }
+
+export const logout = async () => {
+    return await api.post("/auth/logout");
+}

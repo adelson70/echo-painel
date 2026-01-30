@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { login as loginService, type Usuario, me } from '@/features/login/services/auth.service'
+import { login as loginService, type Usuario, me, logout as logoutService } from '@/features/login/services/auth.service'
 import { ElMessage } from 'element-plus'
 
 export const useAuthStore = defineStore('auth', () => {
@@ -42,9 +42,10 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
-    function logout() {
+    async function logout() {
         accessToken.value = null
         usuario.value = null
+        await logoutService()
     }
 
     return {
