@@ -57,7 +57,6 @@ api.interceptors.response.use(
     const requestUrl = originalRequest.url || ''
     const isAuthRoute = AUTH_ROUTES.some(route => requestUrl.includes(route))
 
-    // 👉 se for rota de auth, NÃO tenta refresh
     if (isAuthRoute) {
       return Promise.reject(error)
     }
@@ -76,6 +75,7 @@ api.interceptors.response.use(
       isRefreshing = true
 
       try {
+        console.info('Renovando tokens de acesso...')
         const { data } = await api.post("/auth/refresh-token")
         const newToken = data.accessToken
 
@@ -84,6 +84,7 @@ api.interceptors.response.use(
         api.defaults.headers.common.Authorization = `Bearer ${newToken}`
         processQueue(null, newToken)
 
+        console.info('Tokens renovados com sucesso.')
         return api(originalRequest)
       } catch (err) {
         processQueue(err, null)

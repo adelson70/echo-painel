@@ -10,10 +10,6 @@ const router = createRouter({
 router.beforeEach((to) => {
   const auth = useAuthStore()
 
-  console.log('Navigating to:', to.fullPath)
-  console.log('autenticado:', auth.isAuthenticated)
-  console.log('autenticado (store):', auth)
-
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
     return { name: 'Login' }
   }
