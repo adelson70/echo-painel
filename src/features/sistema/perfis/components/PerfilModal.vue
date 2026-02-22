@@ -1,7 +1,7 @@
 <template>
-    <el-dialog
-        :model-value="dialogVisible"
-        @update:model-value="$emit('update:dialogVisible', $event)"
+    <BaseModal
+        :dialog-visible="dialogVisible"
+        @update:dialog-visible="$emit('update:dialogVisible', $event)"
         :title="modalTitle"
         width="640px"
         @close="$emit('close')"
@@ -102,11 +102,12 @@
                 {{ isEdit ? 'Atualizar' : 'Criar' }}
             </el-button>
         </template>
-    </el-dialog>
+    </BaseModal>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import BaseModal from '@/components/BaseModal.vue'
 import { MODULOS, type Modulos, type PermissaoDto } from '../services/perfil.service'
 
 const MODULO_LABELS: Record<Modulos, string> = {

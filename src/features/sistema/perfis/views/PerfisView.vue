@@ -23,7 +23,7 @@
         />
 
         <PerfilPermissoesModal
-            v-model:visible="permModalVisible"
+            v-model:dialog-visible="permModalVisible"
             :perfil="perfilSelecionado"
             :submitting="permSubmitting"
             @save="savePermissoes"

@@ -1,7 +1,7 @@
 <template>
-    <el-dialog
-        :model-value="visible"
-        @update:model-value="$emit('update:visible', $event)"
+    <BaseModal
+        :dialog-visible="dialogVisible"
+        @update:dialog-visible="$emit('update:dialogVisible', $event)"
         :title="`Permissões${perfil ? `: ${perfil.nome}` : ''}`"
         width="640px"
         @close="$emit('close')"
@@ -86,16 +86,17 @@
             </el-table>
         </template>
         <template #footer>
-            <el-button @click="$emit('update:visible', false)">Cancelar</el-button>
+            <el-button @click="$emit('update:dialogVisible', false)">Cancelar</el-button>
             <el-button type="primary" :loading="submitting" :disabled="!perfil" @click="handleSave">
                 Salvar
             </el-button>
         </template>
-    </el-dialog>
+    </BaseModal>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
+import BaseModal from '@/components/BaseModal.vue'
 import { Loading } from '@element-plus/icons-vue'
 import { MODULOS, type Modulos, type PermissaoDto } from '../services/perfil.service'
 import type { ListPerfilDto } from '../services/perfil.service'
@@ -140,13 +141,13 @@ function mergePermissoes(existing: PermissaoDto[]): PermissaoDto[] {
 }
 
 const props = defineProps<{
-    visible: boolean
+    dialogVisible: boolean
     perfil: ListPerfilDto | null
     submitting: boolean
 }>()
 
 const emit = defineEmits<{
-    'update:visible': [value: boolean]
+    'update:dialogVisible': [value: boolean]
     save: [permissoes: PermissaoDto[]]
     close: []
 }>()
@@ -210,9 +211,9 @@ function setAllCol(
 }
 
 watch(
-  () => [props.visible, props.perfil?.id] as const,
-  async ([visible, id]) => {
-    if (!visible || !id) {
+  () => [props.dialogVisible, props.perfil?.id] as const,
+  async ([dialogVisible, id]) => {
+    if (!dialogVisible || !id) {
       permissoesLocais.value = defaultPermissoes()
       return
     }

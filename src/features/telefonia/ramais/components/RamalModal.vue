@@ -1,7 +1,11 @@
 <template>
-    <el-dialog :model-value="dialogVisible"
-        @update:model-value="$emit('update:dialogVisible', $event)" :title="modalTitle"
-        width="600px" @close="$emit('close')">
+    <BaseModal
+        :dialog-visible="dialogVisible"
+        @update:dialog-visible="$emit('update:dialogVisible', $event)"
+        :title="modalTitle"
+        width="600px"
+        @close="$emit('close')"
+    >
         <el-form ref="formRef" :model="formData" label-position="top">
             <template v-if="isBatch">
                 <el-row>
@@ -88,14 +92,15 @@
         <template #footer>
             <el-button @click="$emit('update:dialogVisible', false)">Cancelar</el-button>
             <el-button type="primary" @click="handleSubmit" :loading="submitting">
-                {{ isEdit ? 'Atualizar' : 'Criar' }}
+                {{ isEdit ? 'Atualizar' : isBatch ? 'Criar lote' : 'Criar' }}
             </el-button>
         </template>
-    </el-dialog>
+    </BaseModal>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import BaseModal from '@/components/BaseModal.vue'
 import { z } from 'zod'
 import { ElMessage } from 'element-plus'
 import { useRamalStore } from '../stores/ramal.store'
@@ -164,9 +169,8 @@ const handleSubmit = async () => {
         schema = singleSchema
     }
 
-    console.log('data', props.formData)
-
-    if (!schema.safeParse(props.formData)) {
+    const result = schema.safeParse(props.formData)
+    if (!result.success) {
         ElMessage.error('Dados inválidos. Verifique os campos.')
         return
     }
