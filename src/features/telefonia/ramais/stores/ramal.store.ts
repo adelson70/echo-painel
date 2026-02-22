@@ -10,7 +10,8 @@ import {
   type RamalDto,
   type CreateRamalDto,
   type CreateLoteRamalDto,
-  type UpdateRamalDto
+  type UpdateRamalDto,
+  ListRegrasSaida
 } from '@/features/telefonia/ramais/services/ramal.service'
 
 export const useRamalStore = defineStore('ramal', () => {
@@ -18,16 +19,16 @@ export const useRamalStore = defineStore('ramal', () => {
   const loading = ref(false)
   const searchQuery = ref('')
 
-const filteredRamais = computed(() => {
+  const filteredRamais = computed(() => {
     if (!searchQuery.value) return ramais.value
 
     const query = searchQuery.value.toString().toLowerCase()
 
     return ramais.value.filter(ramal => {
-        const nome = (ramal.nome || '').toString().toLowerCase()
-        const numero = (ramal.ramal || '').toString()
+      const nome = (ramal.nome || '').toString().toLowerCase()
+      const numero = (ramal.ramal || '').toString()
 
-        return nome.includes(query) || numero.includes(query)
+      return nome.includes(query) || numero.includes(query)
     })
   })
 
@@ -36,7 +37,7 @@ const filteredRamais = computed(() => {
     try {
       const fetched = await ListRamais()
       const statuses = ['ativo', 'em uso', 'chamando', 'tocando', 'offline']
-      ramais.value = fetched.map((r, index) => ({ ...r, status: statuses[index % statuses.length] })) // mock status
+      ramais.value = fetched.map((r, index) => ({ ...r, status: statuses[index % statuses.length] }))
     } catch (error) {
       ElMessage.error('Erro ao carregar ramais.')
       console.log(error)
@@ -45,10 +46,21 @@ const filteredRamais = computed(() => {
     }
   }
 
+  async function listRegrasRamal() {
+    try {
+      const fetched = await ListRegrasSaida()
+      return fetched
+    } catch (error) {
+      ElMessage.error('Erro ao carregar regras de saída.')
+      console.log(error)
+      return []
+    }
+  }
+
   async function createRamal(data: CreateRamalDto) {
     try {
       const newRamal = await CreateRamal(data)
-      ramais.value.push({ ...newRamal, status: 'ativo', dod: newRamal.dod ?? null })
+      ramais.value.push({ ...newRamal, status: 'ativo', dod: newRamal.dod ?? null, regraSaida: newRamal.regraSaida })
       ElMessage.success('Ramal criado com sucesso.')
     } catch (error) {
       throw error
@@ -83,6 +95,7 @@ const filteredRamais = computed(() => {
       }
       ElMessage.success('Ramal atualizado com sucesso.')
     } catch (error) {
+      console.log(error)
       throw error
     }
   }
@@ -103,6 +116,7 @@ const filteredRamais = computed(() => {
     searchQuery,
     filteredRamais,
     fetchRamais,
+    listRegrasRamal,
     createRamal,
     createLoteRamal,
     updateRamal,

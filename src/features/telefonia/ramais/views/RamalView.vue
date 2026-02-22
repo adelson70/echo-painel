@@ -65,7 +65,7 @@ const editRamal = (ramal: RamalDto) => {
     formData.ramal = ramal.ramal
     formData.nome = ramal.nome
     formData.senha = ramal.senha
-    formData.regraSaida = ramal.regraSaida
+    formData.regraSaida = ramal.regraSaida!.id
     formData.maximoContatos = ramal.maximoContatos
     formData.dod = ramal.dod || ''
     dialogVisible.value = true

@@ -2,53 +2,59 @@ import api from "@/shared/api/api";
 import { ElMessage } from 'element-plus'
 
 export interface RamalDto {
-  ramal: string;
-  nome: string;
-  senha: string;
-  regraSaida: string;
-  maximoContatos: number;
-  dod: string | null;
-  status?: string; // mocked for now
+    ramal: string;
+    nome: string;
+    senha: string;
+    regraSaida: { id: string, nome: string } | null;
+    maximoContatos: number;
+    dod: string | null;
+    status?: string;
 }
 
 export interface CreateRamalDto {
-  ramal: string;
-  nome: string;
-  senha: string;
-  regraSaida: string;
-  maximoContatos: number;
-  dod?: string | null;
+    ramal: string;
+    nome: string;
+    senha: string;
+    regraSaida: string;
+    maximoContatos: number;
+    dod?: string | null;
 }
 
 export interface CreateLoteRamalDto {
-  quantidadeRamais: number;
-  ramalInicial: string;
-  nome?: string;
-  senha?: string;
-  regraSaida?: string;
-  maximoContatos?: number;
-  dod?: string | null;
+    quantidadeRamais: number;
+    ramalInicial: string;
+    nome?: string;
+    senha?: string;
+    regraSaida?: string;
+    maximoContatos?: number;
+    dod?: string | null;
 }
 
 export interface UpdateRamalDto {
-  nome?: string;
-  senha?: string;
-  regraSaida?: string;
-  maximoContatos?: number;
-  dod?: string | null;
+    nome?: string;
+    senha?: string;
+    regraSaida?: string;
+    maximoContatos?: number;
+    dod?: string | null;
 }
 
-export interface ListRamalDto extends RamalDto {}
-export interface FindRamalDto extends RamalDto {}
+export interface ListRegrasSaidaDto {
+    id: string;
+    nome: string;
+    tipo: "interno" | "saida" | "teste";
+}
+
+export interface ListRamalDto extends RamalDto { }
+export interface FindRamalDto extends RamalDto { }
 
 export const ListRamais = async (): Promise<RamalDto[]> => {
-  try {
-    const response = await api.get('/ramal');
-    return response.data.data;
-  } catch (error) {
-    ElMessage.error('Erro ao listar ramais.');
-    throw error;
-  }
+    try {
+        const response = await api.get('/ramal');
+        return response.data.data;
+    } catch (error) {
+        ElMessage.error('Erro ao listar ramais.');
+        throw error;
+    }
 };
 
 export const FindRamal = async (ramal: string): Promise<FindRamalDto> => {
@@ -61,7 +67,16 @@ export const FindRamal = async (ramal: string): Promise<FindRamalDto> => {
     }
 };
 
-export const CreateRamal = async (data: CreateRamalDto): Promise<CreateRamalDto> => {
+export const ListRegrasSaida = async (): Promise<ListRegrasSaidaDto[]> => {
+    try {
+        const response = await api.get('/regra/ramal');
+        return response.data.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const CreateRamal = async (data: CreateRamalDto): Promise<RamalDto> => {
     try {
         const response = await api.post('/ramal/create', data);
         ElMessage.success('Ramal criado com sucesso.');
@@ -82,7 +97,7 @@ export const CreateLoteRamal = async (data: CreateLoteRamalDto): Promise<RamalDt
     }
 };
 
-export const UpdateRamal = async (ramal: string, data: UpdateRamalDto): Promise<UpdateRamalDto> => {
+export const UpdateRamal = async (ramal: string, data: UpdateRamalDto): Promise<RamalDto> => {
     try {
         const response = await api.put(`/ramal/${ramal}`, data);
         return response.data.data;

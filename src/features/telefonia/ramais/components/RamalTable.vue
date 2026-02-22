@@ -20,7 +20,11 @@
                 </el-tooltip>
             </template>
         </el-table-column>
-        <el-table-column prop="regraSaida" label="Regra Saída" />
+        <el-table-column prop="regraSaida" label="Regra Saída">
+            <template #default="scope">
+                {{ scope.row.regraSaida?.nome ?? scope.row.regraSaida }}
+            </template>
+        </el-table-column>
         <el-table-column prop="maximoContatos" label="Máximo Contatos" />
         <el-table-column prop="dod" label="DOD" />
         <el-table-column label="Ações">

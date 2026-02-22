@@ -19,8 +19,13 @@
                 </el-row>
                 <el-row>
                     <el-col :span="8">
-                        <el-form-item label="Regra de Saída" prop="regraSaida">
-                            <el-input v-model="formData.regraSaida" />
+                        <el-form-item label="Regra de Saída" prop="regraSaida"
+                            :rules="[{ required: true, message: 'Regra de saída é obrigatória' }]">
+                            <el-select v-model="formData.regraSaida" placeholder="Selecione a regra"
+                                style="width: 100%">
+                                <el-option v-for="regra in regrasSaida" :key="regra.id"
+                                    :label="regra.nome" :value="regra.id" />
+                            </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8" style="padding-left: 20px">
@@ -60,7 +65,11 @@
                     <el-col :span="8">
                         <el-form-item label="Regra de Saída" prop="regraSaida"
                             :rules="[{ required: !isEdit, message: 'Regra de saída é obrigatória' }]">
-                            <el-input v-model="formData.regraSaida" />
+                            <el-select v-model="formData.regraSaida"
+                                placeholder="Selecione a regra">
+                                <el-option v-for="regra in regrasSaida" :key="regra.id"
+                                    :label="regra.nome" :value="regra.id" />
+                            </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8" style="padding-left: 20px">
@@ -86,9 +95,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { z } from 'zod'
 import { ElMessage } from 'element-plus'
+import { useRamalStore } from '../stores/ramal.store'
+import type { ListRegrasSaidaDto } from '../services/ramal.service'
+
+const ramalStore = useRamalStore()
+const regrasSaida = ref<ListRegrasSaidaDto[]>([])
 
 const props = defineProps<{
     dialogVisible: boolean
@@ -150,12 +164,21 @@ const handleSubmit = async () => {
         schema = singleSchema
     }
 
-    const result = schema.safeParse(props.formData)
-    if (!result.success) {
+    console.log('data', props.formData)
+
+    if (!schema.safeParse(props.formData)) {
         ElMessage.error('Dados inválidos. Verifique os campos.')
         return
     }
 
     emit('submit')
 }
+
+onMounted(async () => {
+    try {
+        regrasSaida.value = await ramalStore.listRegrasRamal()
+    } catch (error) {
+        regrasSaida.value = []
+    }
+})
 </script>
