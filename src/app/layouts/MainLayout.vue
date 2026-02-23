@@ -55,7 +55,7 @@
 
     <!-- Conteúdo principal -->
     <el-container>
-      <el-main>
+      <el-main class="main-content">
         <router-view />
       </el-main>
     </el-container>
@@ -184,5 +184,9 @@ async function logout() {
 /* botão de logout cheio tamanho */
 .logout-btn {
   width: 100%;
+}
+
+.main-content {
+  padding: 24px 40px;
 }
 </style>
